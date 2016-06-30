@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=1024" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <title>What's new in PHP 7 and how we (should) use that</title>
+
+        <meta name="description" content="PHP 7 presentation about what's new and how we can use that." />
+        <meta name="author" content="Aris Buzachis" />
+
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic" rel="stylesheet" />
+
+        <link href="css/impress-demo.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/styles/default.min.css">
+        <link rel="shortcut icon" href="images/favicon.ico" />
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+    </head>
+    <body class="impress-not-supported">
+        <div class="fallback-message">
+            <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
+            <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+        </div>
+
+        <div id="impress">
+            <div id="intro" class="step slide center">
+                <h1>What's new in PHP7 and how we (should) use that</h1>
+                <p class="location"><span class="name">Fashion Days</span>, Chiajna</p>
+                <p class="date">Jul. 01, 2016</p>
+                <p class="author">Aris Buzachis</p>
+                <p class="web"><a href="http://www.buzachis-aris.com">www.buzachis-aris.com</a></p>
+            </div>
+
+            <div class="step slide history" data-x="1000">
+                <h1 class="underline">Short history</h1>
+                <ul>
+                    <li>1995 - PHP/FI by Rasmus Lerdorf</li>
+                    <li>1997 - PHP 3.0</li>
+                    <li>1999 - PHP 4.0</li>
+                    <li>2004 - PHP 5.0</li>
+                    <li>2015 - PHP 7.0</li>
+                </ul>
+                <br/>
+            </div>
+            <div class="step history" data-x="1000" data-y="-500">
+                <h1>But 11 years of no major release?</h1>
+            </div>
+            <div class="step history failed" data-x="500" data-y="-400" data-scale="0.05">
+                <h1>1. PHP 6 failed</h1>
+                <ul>
+                    <li>huge code changes (some went into 5.4)</li>
+                    <li>UTF-16 (would use UTF-8 if started from scratch)</li>
+                </ul>
+                <h1>2. PHPNG</h1>
+            </div>
+
+            <div class="step whatsnew" data-x="500" data-y="-1000" data-scale="2" data-rotate="90">
+                <h1>So... what's new?</h1>
+            </div>
+
+            <div class="step whatsnew" data-x="500" data-y="-1000" data-scale="2" data-rotate="90" data-z="-100" data-rotate-y="90">
+                <h1>100% improvement on CPU usage</h1>
+            </div>
+            <div class="step whatsnew" data-x="500" data-y="-1000" data-scale="0.5" data-rotate="90" data-z="-1000" data-rotate-y="90">
+                <h1>50% memory consumption reduction</h1>
+            </div>
+            <div class="step whatsnew" data-x="500" data-y="-500" data-scale="0.5" data-rotate="90" data-z="-1000" data-rotate-y="180">
+                <h1>But how???</h1>
+            </div>
+
+            <div class="step slide whatsnew" data-x="0" data-y="-1500" data-scale="1" data-rotate="180">
+                <h1 class="underline">Engine improvements</h1>
+                <ul>
+                    <li>New memory allocator similar to jemalloc</li>
+                    <li>Array duplication optimization</li>
+                    <li>Faster stack-allocated zvals (instead of heap)</li>
+                    <li>zval size reduced from 24 to 16 bytes</li>
+                    <li>Hashtable size reduced from 72 to 56 bytes</li>
+                    <li>Hashtable bucket size reduced from 72 to 32 bytes</li>
+                    <li>Immutable array optimization (from 43M of memory down to 6M of memory).</li>
+                </ul>
+                <i>"By shipping less memory around, things go a lot faster."</i><br/><br/>
+            </div>
+
+            <div class="step slide benchmark" data-x="0" data-y="-2250" data-scale="1" data-rotate="180">
+                <img src="images/bench_drupal.png" style="margin-top:30px;" />
+            </div>
+            <div class="step slide benchmark" data-x="0" data-y="-3000" data-scale="1" data-rotate="180">
+                <img src="images/bench_wp.png" style="margin-top:30px;" />
+            </div>
+            <div class="step slide benchmark" data-x="0" data-y="-3750" data-scale="1" data-rotate="180">
+                <img src="images/bench_magento.png" style="margin-top:30px;" />
+            </div>
+            <div class="step slide benchmark" data-x="0" data-y="-4500" data-scale="1" data-rotate="180">
+                <img src="images/bench_opencart.png" style="margin-top:30px;" />
+            </div>
+            <div class="step slide benchmark" data-x="0" data-y="-5250" data-scale="1" data-rotate="180">
+                <img src="images/bench_wardrobe.png" style="margin-top:30px;" />
+            </div>
+            <div class="step whatchanged center" data-x="0" data-y="-6000" data-scale="0.3" data-rotate="180">
+                <h1>What changed?</h1>
+            </div>
+
+            <div class="step slide changesample" data-x="-500" data-y="-6000" data-scale="0.5" data-rotate="180">
+                <h1 class="underline">Scalar type declarations</h1>
+                <pre><code class="php">
+        declare(strict_types=1);
+
+        function multiply(float $x, float $y) {
+            return $x * $y;
+        }
+
+        function add(int $x, int $y) {
+            return $x + $y;
+        }
+
+        var_dump(multiply(2, 3.5)); // float(7)
+        var_dump(add('2', 3)); // Fatal error: Uncaught TypeError: Argument 1 passed...
+                </code></pre>
+            </div>
+
+            <div class="step slide changesample" data-x="-500" data-y="-6400" data-scale="0.5" data-rotate="180">
+                <h1 class="underline">Return type declarations</h1>
+                <pre><code class="php">
+        function arraysSum(array ...$arrays): array {
+            return array_map(function(array $array): int {
+                return array_sum($array);
+            }, $arrays);
+        }
+
+        print_r(arraysSum([1,2,3], [4,5,6], [7,8,9]));
+
+        /* Output
+        Array
+        (
+            [0] => 6
+            [1] => 15
+            [2] => 24
+        )
+        */
+                </code></pre>
+            </div>
+
+            <div class="step slide changesample" data-x="-500" data-y="-6800" data-scale="0.5" data-rotate="180">
+                <h1 class="underline">Null coalescing operator</h1>
+                <pre><code class="php">
+        // Pre PHP 7 code
+        $route = isset($_GET['route']) ? $_GET['route'] : 'index';
+
+        // PHP 7+ code
+        $route = $_GET['route'] ?? 'index';
+                </code></pre>
+            </div>
+
+            <div class="step slide changesample" data-x="-1200" data-y="-6800" data-scale="0.5" data-rotate="180">
+                <h1 class="underline">Spaceship operator</h1>
+                <pre><code class="php">
+        // compares strings lexically
+        var_dump('PHP' <=> 'Node'); // int(1)
+
+        // compares numbers by size
+        var_dump(123 <=> 456); // int(-1)
+
+        // compares corresponding array elements with one-another
+        var_dump(['a', 'b'] <=> ['a', 'b']); // int(0)
+                </code></pre>
+            </div>
+
+            <div class="step slide changesample" data-x="-1200" data-y="-6400" data-scale="0.5" data-rotate="180">
+                <h1 class="underline">Anonymous classes</h1>
+                <pre><code class="php">
+        // Pre PHP 7 code
+        class Logger
+        {
+            public function log($msg) {
+            echo $msg;
+            }
+        }
+        $util->setLogger(new Logger());
+
+        // PHP 7+ code
+        $util->setLogger(new class {
+            public function log($msg) {
+                echo $msg;
+            }
+        });
+                </code></pre>
+            </div>
+
+            <div class="step slide changesample" data-x="-1200" data-y="-6000" data-scale="0.5" data-rotate="180">
+                <h1 class="underline">Constant arrays using define()</h1>
+                <pre><code class="php">
+        define('ALLOWED_IMAGE_EXTENSIONS', ['jpg', 'jpeg', 'gif', 'png']);
+                </code></pre>
+                <br/><br/><br/>
+                <h1 class="underline">Unicode codepoint escape syntax</h1>
+                <pre><code class="php">
+        echo "\u{1F60D}"; // outputs <img src="images/emoji.png" style="display:inline-block;height: 20px;" />
+                </code></pre>
+            </div>
+
+            <div class="step slide changesample" data-x="-1900" data-y="-6000" data-scale="0.5" data-rotate="180">
+                <h1 class="underline">Group use declarations</h1>
+                <pre><code class="php">
+        use some\namespace\{ClassA, ClassB, ClassC as C};
+        use function some\namespace\{fn_a, fn_b, fn_c};
+        use const some\namespace\{ConstA, ConstB, ConstC};
+                </code></pre>
+                <br/>
+                <h1 class="underline">CSPRNG Functions</h1>
+                <pre><code class="php">
+        $bytes = random_bytes(5); // length in bytes
+        var_dump(bin2hex($bytes));
+        // output similar to: string(10) "385e33f741"
+
+        random_int(1,20);
+                </code></pre>
+            </div>
+
+            <div class="step slide changesample" data-x="-1900" data-y="-6400" data-scale="0.5" data-rotate="180">
+                <h1 class="underline">Error Handling</h1>
+                <pre><code class="php">
+    |- Exception implements Throwable
+        |- …
+    |- Error implements Throwable
+        |- TypeError extends Error
+        |- ParseError extends Error
+        |- ArithmeticError extends Error
+            |- DivisionByZeroError extends ArithmeticError
+        |- AssertionError extends Error
+                </code></pre>
+            </div>
+
+            <div class="step slide changesample" data-x="-1900" data-y="-6800" data-scale="0.5" data-rotate="180">
+                <h1 class="underline">Uniform variable syntax</h1>
+                <pre><code class="php">
+        // nesting ::
+        $foo::$bar::$baz // access the property $baz of the $foo::$bar property
+
+        // nesting ()
+        foo()() // invoke the return of foo()
+
+        // operators on expressions enclosed in ()
+        (function () {})() // IIFE syntax from JS
+                </code></pre>
+                <br/>
+                <pre><code class="php">
+                                                 // old meaning              // new meaning
+        $$foo['bar']['baz']       ${$foo['bar']['baz']}      ($$foo)['bar']['baz']
+        $foo->$bar['baz']       $foo->{$bar['baz']}       ($foo->$bar)['baz']
+        $foo->$bar['baz']()     $foo->{$bar['baz']}()     ($foo->$bar)['baz']()
+        Foo::$bar['baz']()         Foo::{$bar['baz']}()        (Foo::$bar)['baz']()
+                </code></pre>
+            </div>
+
+            <div class="step slide changesample" data-x="-2600" data-y="-6800" data-scale="0.5" data-rotate="180">
+                <h1 class="underline">preg_replace_callback_array()</h1>
+                <pre><code class="php">
+        preg_replace_callback_array([
+            '~\$[a-z_][a-z\d_]*~i' => function ($match) use (&$tokenStream) {
+                $tokenStream[] = ['T_VARIABLE', $match[0]];
+            },
+            '~=~' => function ($match) use (&$tokenStream) {
+                $tokenStream[] = ['T_ASSIGN', $match[0]];
+            },
+            '~[\d]+~' => function ($match) use (&$tokenStream) {
+                $tokenStream[] = ['T_NUM', $match[0]];
+            },
+            '~;~' => function ($match) use (&$tokenStream) {
+                $tokenStream[] = ['T_TERMINATE_STMT', $match[0]];
+            },
+            '~//.*~' => function ($match) use (&$tokenStream) {
+                $tokenStream[] = ['T_COMMENT', $match[0]];
+            }
+        ], $input);
+                </code></pre>
+            </div>
+
+            <div class="step changesample" data-x="-2600" data-y="-6400" data-scale="1" data-rotate="180">
+                Removed the date.timezone Warning. :)
+            </div>
+
+            <div class="step slide bcs" data-x="-2600" data-y="-6000" data-scale="0.5" data-rotate="180">
+                <h1 class="underline">Backwards compatibility breaks</h1>
+                <ul>
+                    <li>foreach - edge cases fixes.</li>
+                    <li>list() - no strings, order is now left-to-right</li>
+                    <li>Division by Zero - return false for divison and exception for modulus</li>
+                    <li>Removal of Alternative PHP Tags</li>
+                    <li>Removal of Multiple Default Blocks in Switch Statements</li>
+                    <li>Function parameters with duplicate name</li>
+                    <li>Removal of Dead Server APIs (ext/mysql, ext/ereg, sapi/apache etc.)</li>
+                </ul>
+            </div>
+
+            <div class="step slide bcs" data-x="-2600" data-y="-5600" data-scale="0.5" data-rotate="180">
+                <h1 class="underline">Backwards compatibility breaks</h1>
+                <ul>
+                    <li>Removal of Hex Support in Numerical Strings</li>
+                    <li>Reclassification and Removal of E_STRICT Notices</li>
+                    <li>JSON Extension Replaced with JSOND</li>
+                    <li>Static calls to non static methods</li>
+                    <li>Removed $HTTP_RAW_POST_DATA</li>
+                    <li>New reserved keywords (bool, int, float, FALSE, object, mixed)</li>
+                </ul>
+            </div>
+
+            <div class="step whatsnext" data-x="-2600" data-y="-3600" data-scale="1" data-rotate="90">
+                <h1>What's next to come for PHP (7.1)?</h1>
+            </div>
+
+            <div class="step slide whatsnext" data-x="-3400" data-y="-4600" data-scale="1" data-rotate="90">
+                <h1 class="underline">Square bracket syntax for array destructuring assignment</h1>
+                <pre><code class="php">
+        $array = [1, 2, 3];
+        [$a, $b, $c] = $array;
+                </code></pre>
+                <br/>
+                <h1 class="underline">Void Return Type</h1>
+                <pre><code class="php">
+        function returns_null(): void {
+            return null; // Fatal error: A void function must not return a value
+        }
+                </code></pre>
+            </div>
+
+            <div class="step slide whatsnext" data-x="-2600" data-y="-4600" data-scale="1" data-rotate="90">
+                <h1 class="underline">Allow specifying keys in list()</h1>
+                <pre><code class="php">
+        private $name, $colour, $age, $cuteness;
+        // PHP 7.0
+        public function __construct(array $attributes) {
+            $this->name = $attributes["name"];
+            $this->colour = $attributes["colour"];
+            $this->age = $attributes["age"];
+            $this->cuteness = $attributes["cuteness"];
+        }
+        // PHP 7.1
+        public function __construct(array $attributes) {
+            list(
+                "name" => $this->name,
+                "colour" => $this->colour,
+                "age" => $this->age,
+                "cuteness" => $this->cuteness
+            ) = $attributes;
+        }
+                </code></pre>
+            </div>
+
+            <div class="step slide whatsnext curl" data-x="-1800" data-y="-4600" data-scale="1" data-rotate="90">
+                <h1 class="underline">Support Class Constant Visibility</h1>
+                <pre><code class="php">
+        private const PRIVATE_CONST = 0;
+        protected const PROTECTED_CONST = 0;
+        public const PUBLIC_CONST_TWO = 0;
+                </code></pre>
+                <br/>
+                <h1 class="underline">ext/curl HTTP/2 Server Push Support</h1>
+                <p>Server push allows the server to push additional resources relevant to the requested resource directly to the client proactively.</p><br/>
+                <p>You can set and opt CURLMOPT_PUSHFUNCTION with a callback and the callback returns either CURL_PUSH_OK if can handle the push, or CURL_PUSH_DENY to reject it.</p>
+            </div>
+
+            <div class="step whatsnext" data-x="-1000" data-y="-4600" data-scale="1.5" data-rotate="90">
+                ...and some more.<br/>
+                You can find them at https://wiki.php.net/rfc.
+            </div>
+
+            <div class="step upgrade" data-x="-2000" data-y="0" data-rotate-y="270">
+                How did we handle such a big upgrade?
+            </div>
+
+            <div class="step slide upgrade" data-x="-1250" data-y="750">
+                <h1 class="underline">Servers upgrade</h1>
+                <ul>
+                    <li>PHP upgrade</li>
+                    <li>PHP extensions upgrade</li>
+                    <li>PHP configuration</li>
+                    <li>Jenkins upgrade</li>
+                </ul>
+            </div>
+            <div class="step slide upgrade" data-x="-800" data-y="750" data-z="-440" data-rotate-y="90">
+                <h1 class="underline">Code upgrade</h1>
+                <ul>
+                    <li>Symfony 2.3 to 2.8</li>
+                    <li>Every external package to latest version</li>
+                    <li>Fix Symfony deprecations in our code (prepare for 3.0)</li>
+                    <li>Fix some PHP7 BC issues (foreach pointers)</li>
+                    <li>Fork and update abandoned packages</li>
+                    <li>Updated the automated tests for better coverage</li>
+                </ul>
+            </div>
+            <div class="step slide upgrade" data-x="-1250" data-y="750" data-z="-880" data-rotate-y="180">
+                <h1 class="underline">Deployment strategy</h1>
+                <ul>
+                    <li>Be able to have both 5.5 and 7.0 at the same time on nodes (CSRF, php-memcached fixes))</li>
+                    <li>Add one PHP 7 node for each type</li>
+                    <li>Monitor and upgrade more nodes</li>
+                    <li>We had some issues that we handled really quick and very good (mobile, crons)</li>
+                </ul>
+            </div>
+            <div class="step slide upgrade" data-x="-1700" data-y="750" data-z="-440" data-rotate-y="270">
+                <h1 class="underline">The result</h1>
+                <h3>Stress test</h3>
+                <table>
+                    <th><td>reqs/s</td><td>load</td><td>t<1s</td><td>1s&lt;t< 5s</td><td>t>5s</td><td>failed</td></th>
+                    <tr><td>PHP7</td><td class="bggreen">13</td><td>10</td><td>47%</td><td>34%</td><td>19%</td><td>0%</td></tr>
+                    <tr><td>PHP5.5</td><td class="bgred">5</td><td>28</td><td>7%</td><td>57%</td><td>36%</td><td>0%</td></tr>
+                    <tr><td>PHP7</td><td>8</td><td>2.5</td><td>94%</td><td>6%</td><td>0%</td><td>0%</td></tr>
+                </table>
+                <br/>
+                <h3>Siege test (-c 10, 180S) - PDP cached</h3>
+                <table>
+                    <th><td>Hits</td><td>Response time (s)</td><td>Transaction rate (trans/s)</td></th>
+                    <tr><td>PHP7</td><td>2553</td><td>0.68</td><td>14.19</td></tr>
+                    <tr><td>PHP5.5</td><td>1253</td><td>1.39</td><td>6.97</td></tr>
+                </table>
+            </div>
+
+            <div class="step" data-scale="10" data-rotate="180" data-y="-3000">
+                Questions
+            </div>
+        </div>
+
+        <!--
+            http://php.net/manual/ro/migration70.new-features.php
+            https://github.com/tpunt/PHP7-Reference
+            see what's next: https://wiki.php.net/rfc
+        -->
+
+        <script src="js/impress.js"></script>
+        <script>impress().init();</script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.5.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script>
+    </body>
+</html>
